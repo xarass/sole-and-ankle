@@ -31,19 +31,24 @@ const ShoeCard = ({
       ? 'new-release'
       : 'default'
 
+  const salePriceText = variant === 'on-sale' ? <SalePrice>{formatPrice(salePrice)}</SalePrice> : '';
+  const bannerText = variant !== 'default' ? <Banner variant={variant}>{variant === 'on-sale' ? "Sale" : "Just Released!"}</Banner> : '';
+
   return (
     <Link href={`/shoe/${slug}`}>
       <Wrapper>
         <ImageWrapper>
           <Image alt="" src={imageSrc} />
+          {bannerText}
         </ImageWrapper>
         <Spacer size={12} />
         <Row>
           <Name>{name}</Name>
-          <Price>{formatPrice(price)}</Price>
+          <Price variant={variant}>{formatPrice(price)}</Price>
         </Row>
         <Row>
           <ColorInfo>{pluralize('Color', numOfColors)}</ColorInfo>
+          {salePriceText}
         </Row>
       </Wrapper>
     </Link>
@@ -52,19 +57,31 @@ const ShoeCard = ({
 
 const Link = styled.a`
   text-decoration: none;
-  color: inherit;
+  color: inherit;  
+  display: flex;
 `;
 
-const Wrapper = styled.article``;
+const Wrapper = styled.article`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 400px;
+  min-width: 200px;
+`;
 
 const ImageWrapper = styled.div`
   position: relative;
 `;
 
-const Image = styled.img``;
+const Image = styled.img`
+  width: 100%;
+  border-radius: 16px 16px 4px 4px;
+`;
 
 const Row = styled.div`
   font-size: 1rem;
+  display: flex;
+  justify-content: space-between;
 `;
 
 const Name = styled.h3`
@@ -72,7 +89,10 @@ const Name = styled.h3`
   color: ${COLORS.gray[900]};
 `;
 
-const Price = styled.span``;
+const Price = styled.span`
+  text-decoration: ${props => props.variant === 'on-sale' ? "line-through" : "initial"};
+  color: ${props => props.variant === 'on-sale' ? "#60666C" : "inherit"};
+`;
 
 const ColorInfo = styled.p`
   color: ${COLORS.gray[700]};
@@ -82,5 +102,15 @@ const SalePrice = styled.span`
   font-weight: ${WEIGHTS.medium};
   color: ${COLORS.primary};
 `;
+
+const Banner = styled.div`
+  position: absolute;
+  top: 12px;
+  right: -4px;
+  border-radius: 2px;
+  background-color: ${props => props.variant === 'on-sale' ? "#C5295D" : "#6868D9"};
+  padding: 8px 10px;
+  color: white;
+`
 
 export default ShoeCard;
